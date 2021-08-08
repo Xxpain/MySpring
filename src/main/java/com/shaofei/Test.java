@@ -2,7 +2,6 @@ package com.shaofei;
 
 import com.shaofei.service.UserService;
 import com.spring.ShaoFeiApplicationContext;
-import javafx.application.Application;
 
 /**
  * @author xsf
