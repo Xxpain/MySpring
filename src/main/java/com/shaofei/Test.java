@@ -11,6 +11,7 @@ public class Test {
     public static void main(String[] args) {
         ShaoFeiApplicationContext shaoFeiApplicationContext = new ShaoFeiApplicationContext(AppConfig.class);
         UserService userService = (UserService)shaoFeiApplicationContext.getBean("userService");
+        System.out.println(userService);
     }
 
 }

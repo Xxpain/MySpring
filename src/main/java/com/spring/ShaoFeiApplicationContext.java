@@ -22,16 +22,17 @@ public class ShaoFeiApplicationContext {
 
         //拿到配置类然后获取扫描路径
         ComponentScan componentScan = (ComponentScan) configClass.getDeclaredAnnotation(ComponentScan.class);
-        String value = componentScan.value();
+        String path = componentScan.value(); // 扫描路径 com.zhiyuan.service
+        path = path.replace(".", "/");
         ClassLoader classLoader = configClass.getClassLoader();
-        URL resource = classLoader.getResource("com/shaofei/service");
+        URL resource = classLoader.getResource(path);
         File file = new File(resource.getFile());
         if (file.isDirectory()) {
             File[] files = file.listFiles();
             for (File f : files) {
                 String fileName = f.getAbsolutePath();
                 String className = fileName.substring(fileName.indexOf("com"), fileName.indexOf(".class"));
-                className = className.replace("/", ".");
+                className = className.replace("\\", ".");
                 try {
                     Class<?> aClass = classLoader.loadClass(className);
                     if (aClass.isAnnotationPresent(Component.class)) {
@@ -40,11 +41,13 @@ public class ShaoFeiApplicationContext {
                         String beanName = declaredAnnotation.value();
 
                         BeanDefinition beanDefinition = new BeanDefinition();
-
+                        beanDefinition.setClazz(aClass);
 
                         if (!aClass.isAnnotationPresent(Scope.class)) {
                             //单例
                             beanDefinition.setScope("singleton");
+                            Object bean = createBean(beanDefinition);
+                            singletonObjects.put(beanName,bean);
                         } else {
                             //todo 多例
                             beanDefinition.setScope("");
